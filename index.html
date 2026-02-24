@@ -1501,59 +1501,53 @@
       after = null,
     } = options;
 
-    const queryString = query
-      ? `query: "${query.replace(/"/g, '\\"')}"`
-      : '';
-
     const graphqlQuery = `
-      query SearchProducts($first: Int!, $after: String, $sortKey: ProductSortKeys!, $reverse: Boolean!, $query: String) {
-        search(first: $first, after: $after, types: PRODUCT, query: $query, sortKey: $sortKey, reverse: $reverse) {
+      query GetProducts($first: Int!, $after: String, $sortKey: ProductSortKeys!, $reverse: Boolean!, $query: String) {
+        products(first: $first, after: $after, sortKey: $sortKey, reverse: $reverse, query: $query) {
           edges {
             node {
-              ... on Product {
-                id
-                title
-                description
-                handle
-                productType
-                tags
-                vendor
-                priceRange {
-                  minVariantPrice {
-                    amount
-                    currencyCode
-                  }
-                  maxVariantPrice {
-                    amount
-                    currencyCode
+              id
+              title
+              description
+              handle
+              productType
+              tags
+              vendor
+              priceRange {
+                minVariantPrice {
+                  amount
+                  currencyCode
+                }
+                maxVariantPrice {
+                  amount
+                  currencyCode
+                }
+              }
+              images(first: 10) {
+                edges {
+                  node {
+                    id
+                    url
+                    altText
+                    width
+                    height
                   }
                 }
-                images(first: 10) {
-                  edges {
-                    node {
-                      id
+              }
+              variants(first: 250) {
+                edges {
+                  node {
+                    id
+                    title
+                    sku
+                    availableForSale
+                    price {
+                      amount
+                      currencyCode
+                    }
+                    image {
                       url
                       altText
-                      width
-                      height
-                    }
-                  }
-                }
-                variants(first: 250) {
-                  edges {
-                    node {
-                      id
-                      title
-                      sku
-                      available: availableForSale
-                      price {
-                        amount
-                        currencyCode
-                      }
-                      image {
-                        url
-                        altText
-                      }
                     }
                   }
                 }
@@ -1578,7 +1572,7 @@
 
     const data = await graphqlRequest(graphqlQuery, variables);
 
-    return data.search.edges.map(edge => formatProductNode(edge.node));
+    return data.products.edges.map(edge => formatProductNode(edge.node));
   }
 
   /**
@@ -1589,7 +1583,7 @@
   async function getProduct(handle) {
     const graphqlQuery = `
       query GetProductByHandle($handle: String!) {
-        productByHandle(handle: $handle) {
+        product(handle: $handle) {
           id
           title
           description
@@ -1651,11 +1645,11 @@
     const variables = { handle };
     const data = await graphqlRequest(graphqlQuery, variables);
 
-    if (!data.productByHandle) {
+    if (!data.product) {
       throw new Error(`Product with handle "${handle}" not found`);
     }
 
-    return formatProductNode(data.productByHandle);
+    return formatProductNode(data.product);
   }
 
   /**
@@ -1667,7 +1661,7 @@
   async function getProductsByCollection(collectionHandle, first = 50) {
     const graphqlQuery = `
       query GetCollectionProducts($handle: String!, $first: Int!) {
-        collectionByHandle(handle: $handle) {
+        collection(handle: $handle) {
           id
           title
           description
@@ -1730,11 +1724,11 @@
 
     const data = await graphqlRequest(graphqlQuery, variables);
 
-    if (!data.collectionByHandle) {
+    if (!data.collection) {
       throw new Error(`Collection with handle "${collectionHandle}" not found`);
     }
 
-    return data.collectionByHandle.products.edges.map(edge => formatProductNode(edge.node));
+    return data.collection.products.edges.map(edge => formatProductNode(edge.node));
   }
 
   /**
@@ -1785,7 +1779,7 @@
     return getProducts({
       first: 50,
       query: searchTerm,
-      sortKey: 'RELEVANCE',
+      sortKey: 'TITLE',
     });
   }
 
@@ -1820,7 +1814,7 @@
         id: edge.node.id,
         title: edge.node.title,
         sku: edge.node.sku,
-        available: edge.node.available,
+        available: edge.node.availableForSale,
         price: edge.node.price,
         image: edge.node.image,
         selectedOptions: edge.node.selectedOptions || [],
