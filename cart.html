@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart - DutchieTCG</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #09090b;
+            --surface: #111113;
+            --surface-2: #18181b;
+            --border: #27272a;
+            --border-light: #3f3f46;
+            --text: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(9, 9, 11, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            padding: 0 24px;
+            height: 64px;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .logo-dutchie {
+            color: var(--text);
+        }
+
+        .logo-tcg {
+            color: var(--text-muted);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+        }
+
+        .nav-links .cart-link {
+            position: relative;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -12px;
+            background: #ef4444;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            min-width: 20px;
+        }
+
+        .cart-badge.hidden {
+            display: none;
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 100px 24px 60px;
+            min-height: 100vh;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 40px;
+        }
+
+        .cart-container {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 40px;
+        }
+
+        /* Cart Items */
+        .cart-items {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .cart-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 100px 1fr auto;
+            gap: 20px;
+            align-items: start;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .item-image {
+            width: 100px;
+            height: 100px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .item-image-placeholder {
+            font-size: 40px;
+        }
+
+        .item-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .item-product-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .item-brand {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .item-type {
+            display: inline-flex;
+            width: fit-content;
+            font-size: 11px;
+            font-weight: 600;
+            background: var(--surface-2);
+            border: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-top: 4px;
+        }
+
+        .item-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-items: flex-end;
+        }
+
+        .item-quantity-control {
+            display: flex;
+            gap: 8px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 6px;
+            align-items: center;
+        }
+
+        .quantity-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: color 0.2s;
+            border-radius: 4px;
+        }
+
+        .quantity-btn:hover {
+            color: var(--text);
+            background: var(--border);
+        }
+
+        .quantity-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .quantity-input {
+            width: 40px;
+            background: none;
+            border: none;
+            color: var(--text);
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .quantity-input:focus {
+            outline: none;
+        }
+
+        .item-price {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text);
+            text-align: right;
+        }
+
+        .item-remove {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 20px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s;
+            border-radius: 4px;
+        }
+
+        .item-remove:hover {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Continue Shopping */
+        .continue-shopping {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 20px;
+            transition: color 0.2s;
+        }
+
+        .continue-shopping:hover {
+            color: var(--text);
+        }
+
+        /* Order Summary */
+        .order-summary {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            height: fit-content;
+            position: sticky;
+            top: 80px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .summary-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .summary-row.subtotal {
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-row.total {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text);
+            padding-top: 8px;
+        }
+
+        .summary-value {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .summary-value.shipping {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        /* Discount Code */
+        .discount-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 16px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin: 16px 0;
+        }
+
+        .discount-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .discount-input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .discount-input {
+            flex: 1;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: var(--text);
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .discount-input:focus {
+            outline: none;
+            border-color: var(--border-light);
+        }
+
+        .discount-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .discount-btn {
+            padding: 8px 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .discount-btn:hover {
+            border-color: var(--border-light);
+            color: var(--text);
+        }
+
+        /* Checkout Button */
+        .checkout-btn {
+            width: 100%;
+            padding: 12px;
+            background: white;
+            color: black;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .checkout-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .checkout-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Trust Badges */
+        .trust-badges {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .trust-badge {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .trust-badge-icon {
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .shopify-note {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: center;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Empty Cart State */
+        .empty-cart {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 40px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .empty-cart-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .empty-cart-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .empty-cart-message {
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            font-size: 15px;
+        }
+
+        .empty-cart-link {
+            display: inline-block;
+            padding: 12px 24px;
+            background: white;
+            color: black;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .empty-cart-link:hover {
+            background: #f5f5f5;
+        }
+
+        /* Loading State */
+        .loading-skeleton {
+            background: linear-gradient(90deg, var(--surface-2) 0%, var(--border) 50%, var(--surface-2) 100%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 8px;
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        .skeleton-item {
+            height: 140px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 24px;
+            color: var(--text);
+            font-size: 14px;
+            z-index: 2000;
+            animation: slideUpIn 0.3s ease-out;
+        }
+
+        .toast.success {
+            border-left: 4px solid #10b981;
+        }
+
+        .toast.error {
+            border-left: 4px solid #ef4444;
+        }
+
+        @keyframes slideUpIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Footer */
+        footer {
+            max-width: 1400px;
+            margin: 80px auto 0;
+            padding: 40px 24px;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 13px;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 0 16px;
+            }
+
+            .nav-links {
+                gap: 16px;
+            }
+
+            main {
+                padding: 80px 16px 40px;
+            }
+
+            .page-title {
+                font-size: 24px;
+                margin-bottom: 24px;
+            }
+
+            .cart-container {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .order-summary {
+                position: static;
+                top: auto;
+            }
+
+            .cart-item {
+                grid-template-columns: 80px 1fr;
+                gap: 16px;
+            }
+
+            .item-image {
+                width: 80px;
+                height: 80px;
+            }
+
+            .item-actions {
+                grid-column: 2;
+                align-items: flex-start;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-dutchie">dutchie</span>
+                <span class="logo-tcg">tcg</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Shop</a></li>
+                <li><a href="index.html#how-it-works">How it works</a></li>
+                <li><a href="index.html#faq">FAQ</a></li>
+                <li><a href="cart.html" class="cart-link">Cart <span class="cart-badge hidden" id="cartBadge">0</span></a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <h1 class="page-title">Your Cart</h1>
+
+        <div class="cart-container" id="cartContainer">
+            <!-- Loading skeleton while fetching cart -->
+            <div class="cart-items">
+                <div class="loading-skeleton skeleton-item"></div>
+                <div class="loading-skeleton skeleton-item"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 DutchieTCG. All rights reserved. | <a href="index.html" style="color: var(--text-secondary); text-decoration: none;">Home</a></p>
+    </footer>
+
+    <!-- Toast Container -->
+    <div id="toastContainer"></div>
+
+    <!-- Shopify Storefront API Module -->
+    <script>
+        (function() {
+            const SHOPIFY_DOMAIN = 'dutchietcg.myshopify.com';
+            const STOREFRONT_TOKEN = 'edee330c43e3452aff861f515863f067';
+            const API_VERSION = '2025-01';
+
+            window.ShopifyAPI = {
+                /**
+                 * Make a GraphQL request to Shopify Storefront API
+                 */
+                async graphqlRequest(query, variables = {}) {
+                    const url = `https://${SHOPIFY_DOMAIN}/api/${API_VERSION}/graphql.json`;
+
+                    try {
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Shopify-Storefront-Access-Token': STOREFRONT_TOKEN
+                            },
+                            body: JSON.stringify({
+                                query,
+                                variables
+                            })
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                        }
+
+                        const data = await response.json();
+
+                        if (data.errors) {
+                            console.error('GraphQL Errors:', data.errors);
+                            throw new Error(data.errors[0]?.message || 'GraphQL error');
+                        }
+
+                        return data.data;
+                    } catch (error) {
+                        console.error('API Request Error:', error);
+                        throw error;
+                    }
+                },
+
+                /**
+                 * Fetch cart with all line items
+                 */
+                async getCart(cartId) {
+                    const query = `
+                        query GetCart($cartId: ID!) {
+                            cart(id: $cartId) {
+                                id
+                                checkoutUrl
+                                totalQuantity
+                                cost {
+                                    totalAmount { amount, currencyCode }
+                                    subtotalAmount { amount, currencyCode }
+                                }
+                                lines(first: 100) {
+                                    edges {
+                                        node {
+                                            id
+                                            quantity
+                                            cost { totalAmount { amount, currencyCode } }
+                                            merchandise {
+                                                ... on ProductVariant {
+                                                    id
+                                                    title
+                                                    product {
+                                                        title
+                                                        handle
+                                                        vendor
+                                                        productType
+                                                        images(first: 1) {
+                                                            edges {
+                                                                node { url }
+                                                            }
+                                                        }
+                                                    }
+                                                    price { amount, currencyCode }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    `;
+
+                    return await this.graphqlRequest(query, { cartId });
+                },
+
+                /**
+                 * Update quantity of a cart line item
+                 */
+                async updateCartItem(cartId, lineId, quantity) {
+                    const query = `
+                        mutation cartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
+                            cartLinesUpdate(cartId: $cartId, lines: $lines) {
+                                cart {
+                                    id
+                                    totalQuantity
+                                    cost {
+                                        totalAmount { amount, currencyCode }
+                                        subtotalAmount { amount, currencyCode }
+                                    }
+                                    lines(first: 100) {
+                                        edges {
+                                            node {
+                                                id
+                                                quantity
+                                                cost { totalAmount { amount, currencyCode } }
+                                                merchandise {
+                                                    ... on ProductVariant {
+                                                        id
+                                                        title
+                                                        product {
+                                                            title
+                                                            handle
+                                                            vendor
+                                                            productType
+                                                            images(first: 1) {
+                                                                edges {
+                                                                    node { url }
+                                                                }
+                                                            }
+                                                        }
+                                                        price { amount, currencyCode }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                userErrors {
+                                    field
+                                    message
+                                }
+                            }
+                        }
+                    `;
+
+                    const lines = [{ id: lineId, quantity }];
+                    return await this.graphqlRequest(query, { cartId, lines });
+                },
+
+                /**
+                 * Remove items from cart
+                 */
+                async removeFromCart(cartId, lineIds) {
+                    const query = `
+                        mutation cartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {
+                            cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
+                                cart {
+                                    id
+                                    totalQuantity
+                                    cost {
+                                        totalAmount { amount, currencyCode }
+                                        subtotalAmount { amount, currencyCode }
+                                    }
+                                    lines(first: 100) {
+                                        edges {
+                                            node {
+                                                id
+                                                quantity
+                                                cost { totalAmount { amount, currencyCode } }
+                                                merchandise {
+                                                    ... on ProductVariant {
+                                                        id
+                                                        title
+                                                        product {
+                                                            title
+                                                            handle
+                                                            vendor
+                                                            productType
+                                                            images(first: 1) {
+                                                                edges {
+                                                                    node { url }
+                                                                }
+                                                            }
+                                                        }
+                                                        price { amount, currencyCode }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                userErrors {
+                                    field
+                                    message
+                                }
+                            }
+                        }
+                    `;
+
+                    return await this.graphqlRequest(query, { cartId, lineIds });
+                },
+
+                /**
+                 * Format price using Dutch locale
+                 */
+                formatPrice(amount, currency = 'EUR') {
+                    return new Intl.NumberFormat('nl-NL', {
+                        style: 'currency',
+                        currency: currency
+                    }).format(parseFloat(amount));
+                }
+            };
+        })();
+    </script>
+
+    <!-- Cart Page Application -->
+    <script>
+        class DutchieCart {
+            constructor() {
+                this.cartId = localStorage.getItem('dutchie_cart_id');
+                this.cartData = null;
+                this.cartContainer = document.getElementById('cartContainer');
+                this.toastContainer = document.getElementById('toastContainer');
+                this.cartBadge = document.getElementById('cartBadge');
+
+                this.init();
+            }
+
+            async init() {
+                try {
+                    if (!this.cartId) {
+                        this.renderEmptyCart();
+                        return;
+                    }
+
+                    await this.fetchCart();
+                    this.render();
+                    this.updateCartBadge();
+                } catch (error) {
+                    console.error('Cart initialization error:', error);
+                    this.showToast('Error loading cart', 'error');
+                    this.renderEmptyCart();
+                }
+            }
+
+            async fetchCart() {
+                try {
+                    const data = await ShopifyAPI.getCart(this.cartId);
+                    this.cartData = data.cart;
+
+                    if (!this.cartData) {
+                        throw new Error('Cart not found');
+                    }
+                } catch (error) {
+                    console.error('Fetch cart error:', error);
+                    localStorage.removeItem('dutchie_cart_id');
+                    this.cartId = null;
+                    throw error;
+                }
+            }
+
+            async updateQuantity(lineId, quantity) {
+                try {
+                    if (quantity < 1) {
+                        await this.removeItem(lineId);
+                        return;
+                    }
+
+                    const data = await ShopifyAPI.updateCartItem(this.cartId, lineId, quantity);
+                    this.cartData = data.cartLinesUpdate.cart;
+                    this.updateCartBadge();
+                    this.render();
+                    this.showToast('Quantity updated', 'success');
+                } catch (error) {
+                    console.error('Update quantity error:', error);
+                    this.showToast('Failed to update quantity', 'error');
+                    this.render();
+                }
+            }
+
+            async removeItem(lineId) {
+                try {
+                    const data = await ShopifyAPI.removeFromCart(this.cartId, [lineId]);
+                    this.cartData = data.cartLinesRemove.cart;
+                    this.updateCartBadge();
+                    this.render();
+                    this.showToast('Item removed from cart', 'success');
+                } catch (error) {
+                    console.error('Remove item error:', error);
+                    this.showToast('Failed to remove item', 'error');
+                    this.render();
+                }
+            }
+
+            updateCartBadge() {
+                const count = this.cartData?.totalQuantity || 0;
+                localStorage.setItem('dutchie_cart_count', count);
+
+                if (count > 0) {
+                    this.cartBadge.textContent = count;
+                    this.cartBadge.classList.remove('hidden');
+                } else {
+                    this.cartBadge.classList.add('hidden');
+                }
+            }
+
+            renderEmptyCart() {
+                this.cartContainer.innerHTML = `
+                    <div class="empty-cart">
+                        <div class="empty-cart-icon">🛒</div>
+                        <h2 class="empty-cart-title">Your cart is empty</h2>
+                        <p class="empty-cart-message">Start browsing our collection to add items to your cart.</p>
+                        <a href="products.html" class="empty-cart-link">Continue Shopping</a>
+                    </div>
+                `;
+            }
+
+            render() {
+                if (!this.cartData || !this.cartData.lines || this.cartData.lines.edges.length === 0) {
+                    this.renderEmptyCart();
+                    return;
+                }
+
+                const items = this.cartData.lines.edges.map(edge => edge.node);
+                const subtotal = this.cartData.cost.subtotalAmount.amount;
+                const total = this.cartData.cost.totalAmount.amount;
+
+                const itemsHTML = items.map(item => this.renderItem(item)).join('');
+
+                const html = `
+                    <div class="cart-items">
+                        ${itemsHTML}
+                        <a href="products.html" class="continue-shopping">
+                            ← Continue Shopping
+                        </a>
+                    </div>
+
+                    <div class="order-summary">
+                        <h3 class="summary-title">Order Summary</h3>
+
+                        <div class="summary-row subtotal">
+                            <span>Subtotal</span>
+                            <span class="summary-value">${ShopifyAPI.formatPrice(subtotal)}</span>
+                        </div>
+
+                        <div class="summary-row">
+                            <span>Shipping</span>
+                            <span class="summary-value shipping">Calculated at checkout</span>
+                        </div>
+
+                        <div class="discount-section">
+                            <label class="discount-label">Discount Code</label>
+                            <div class="discount-input-group">
+                                <input type="text" class="discount-input" id="discountCode" placeholder="Enter code">
+                                <button class="discount-btn" id="applyDiscountBtn">Apply</button>
+                            </div>
+                        </div>
+
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span class="summary-value">${ShopifyAPI.formatPrice(total)}</span>
+                        </div>
+
+                        <button class="checkout-btn" id="checkoutBtn">Proceed to Checkout</button>
+
+                        <div class="trust-badges">
+                            <div class="trust-badge">
+                                <span class="trust-badge-icon">✓</span>
+                                <span>Secure checkout powered by Shopify</span>
+                            </div>
+                            <div class="trust-badge">
+                                <span class="trust-badge-icon">🎴</span>
+                                <span>Cards sleeved & protected</span>
+                            </div>
+                            <div class="trust-badge">
+                                <span class="trust-badge-icon">🚚</span>
+                                <span>Shipped within 48 hours</span>
+                            </div>
+                        </div>
+
+                        <div class="shopify-note">
+                            Checkout powered by Shopify
+                        </div>
+                    </div>
+                `;
+
+                this.cartContainer.innerHTML = html;
+                this.attachEventListeners();
+            }
+
+            renderItem(item) {
+                const variant = item.merchandise;
+                const product = variant.product;
+                const image = product.images.edges[0]?.node.url;
+                const linePrice = item.cost.totalAmount.amount;
+                const quantity = item.quantity;
+
+                return `
+                    <div class="cart-item" data-line-id="${item.id}">
+                        <div class="item-image">
+                            ${image
+                                ? `<img src="${image}" alt="${product.title}">`
+                                : '<div class="item-image-placeholder">📦</div>'
+                            }
+                        </div>
+
+                        <div class="item-details">
+                            <div class="item-product-name">${product.title}</div>
+                            <div class="item-brand">${product.vendor || 'Unknown Brand'}</div>
+                            ${product.productType ? `<div class="item-type">${product.productType}</div>` : ''}
+                        </div>
+
+                        <div class="item-actions">
+                            <div class="item-quantity-control">
+                                <button class="quantity-btn minus-btn" data-line-id="${item.id}" ${quantity <= 1 ? 'disabled' : ''}>−</button>
+                                <input type="number" class="quantity-input" data-line-id="${item.id}" value="${quantity}" min="1">
+                                <button class="quantity-btn plus-btn" data-line-id="${item.id}">+</button>
+                            </div>
+
+                            <div class="item-price">${ShopifyAPI.formatPrice(linePrice)}</div>
+
+                            <button class="item-remove" data-line-id="${item.id}" title="Remove item">×</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            attachEventListeners() {
+                // Quantity controls
+                document.querySelectorAll('.minus-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const lineId = btn.dataset.lineId;
+                        const input = document.querySelector(`.quantity-input[data-line-id="${lineId}"]`);
+                        const qty = Math.max(1, parseInt(input.value) - 1);
+                        this.updateQuantity(lineId, qty);
+                    });
+                });
+
+                document.querySelectorAll('.plus-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const lineId = btn.dataset.lineId;
+                        const input = document.querySelector(`.quantity-input[data-line-id="${lineId}"]`);
+                        const qty = parseInt(input.value) + 1;
+                        this.updateQuantity(lineId, qty);
+                    });
+                });
+
+                document.querySelectorAll('.quantity-input').forEach(input => {
+                    input.addEventListener('change', () => {
+                        const lineId = input.dataset.lineId;
+                        const qty = Math.max(1, parseInt(input.value) || 1);
+                        this.updateQuantity(lineId, qty);
+                    });
+                });
+
+                // Remove button
+                document.querySelectorAll('.item-remove').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const lineId = btn.dataset.lineId;
+                        this.removeItem(lineId);
+                    });
+                });
+
+                // Checkout button
+                const checkoutBtn = document.getElementById('checkoutBtn');
+                if (checkoutBtn && this.cartData?.checkoutUrl) {
+                    checkoutBtn.addEventListener('click', () => {
+                        window.location.href = this.cartData.checkoutUrl;
+                    });
+                }
+
+                // Discount code (placeholder - would need backend to implement)
+                const applyDiscountBtn = document.getElementById('applyDiscountBtn');
+                if (applyDiscountBtn) {
+                    applyDiscountBtn.addEventListener('click', () => {
+                        this.showToast('Discount codes are applied at checkout', 'success');
+                    });
+                }
+            }
+
+            showToast(message, type = 'success') {
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.textContent = message;
+                this.toastContainer.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.remove();
+                }, 3000);
+            }
+        }
+
+        // Initialize cart when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            new DutchieCart();
+        });
+    </script>
+</body>
+</html>

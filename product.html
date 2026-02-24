@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product | DutchieTCG</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #09090b;
+            --surface: #111113;
+            --surface-2: #18181b;
+            --border: #27272a;
+            --border-light: #3f3f46;
+            --text: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --radius: 12px;
+        }
+
+        html, body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 72px;
+            background: rgba(9, 9, 11, 0.8);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 18px;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .nav-logo span {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+        }
+
+        .nav-cart {
+            position: relative;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .nav-cart:hover {
+            color: var(--text);
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -12px;
+            background: #ef4444;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 72px;
+            padding: 48px 32px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 40px;
+            font-size: 14px;
+        }
+
+        .breadcrumb a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--text);
+        }
+
+        .breadcrumb span {
+            color: var(--text-muted);
+        }
+
+        .breadcrumb .current {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        /* Loading Skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface) 50%, var(--surface-2) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .skeleton-text {
+            height: 16px;
+            border-radius: var(--radius);
+            margin-bottom: 12px;
+        }
+
+        .skeleton-image {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: var(--radius);
+            margin-bottom: 24px;
+        }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            margin-bottom: 80px;
+        }
+
+        /* Product Images */
+        .product-images {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-image {
+            width: 100%;
+            aspect-ratio: 1;
+            background: var(--surface-2);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            overflow: hidden;
+            font-size: 64px;
+        }
+
+        .main-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-thumbnails {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius);
+            border: 2px solid var(--border);
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .thumbnail.active {
+            border-color: var(--text);
+        }
+
+        .thumbnail:hover {
+            border-color: var(--text-secondary);
+        }
+
+        /* Product Details */
+        .product-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-tag {
+            display: inline-block;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: var(--radius);
+            margin-bottom: 24px;
+            width: fit-content;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .product-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .product-type-badge {
+            display: inline-block;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: var(--radius);
+            margin-bottom: 24px;
+            width: fit-content;
+        }
+
+        .price {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 32px;
+        }
+
+        .description {
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        /* Quantity Selector */
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px;
+            width: fit-content;
+        }
+
+        .quantity-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px 8px;
+            transition: color 0.2s ease;
+        }
+
+        .quantity-btn:hover {
+            color: var(--text-secondary);
+        }
+
+        .quantity-input {
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 16px;
+            font-weight: 600;
+            width: 40px;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .quantity-input:focus {
+            outline: none;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 48px;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background: white;
+            color: black;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: #f0f0f0;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background: var(--surface-2);
+            border-color: var(--border-light);
+        }
+
+        .btn-secondary:active {
+            transform: scale(0.98);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Info Items */
+        .info-items {
+            border-top: 1px solid var(--border);
+            padding-top: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .info-item-icon {
+            font-size: 18px;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 80px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 40px;
+        }
+
+        /* How it Works */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+        }
+
+        .step {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            padding: 32px;
+            border-radius: var(--radius);
+        }
+
+        .step-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .step-description {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Related Products */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 32px;
+        }
+
+        .product-card {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            border-color: var(--border-light);
+            transform: translateY(-4px);
+        }
+
+        .product-card-image {
+            width: 100%;
+            aspect-ratio: 1;
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            overflow: hidden;
+        }
+
+        .product-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-card-content {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card-brand {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .product-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .product-card-price {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text);
+            margin-top: auto;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 48px 32px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 16px 24px;
+            border-radius: var(--radius);
+            z-index: 1000;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            nav {
+                padding: 0 20px;
+            }
+
+            .nav-links {
+                gap: 20px;
+            }
+
+            main {
+                padding: 32px 20px;
+            }
+
+            .product-title {
+                font-size: 28px;
+            }
+
+            .price {
+                font-size: 24px;
+            }
+
+            .steps-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            nav {
+                padding: 0 16px;
+                justify-content: space-between;
+            }
+
+            .nav-logo span {
+                display: none;
+            }
+
+            .nav-links {
+                gap: 16px;
+                font-size: 12px;
+            }
+
+            main {
+                padding: 20px 16px;
+            }
+
+            .product-title {
+                font-size: 24px;
+            }
+
+            .price {
+                font-size: 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .section-title {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a href="index.html" class="nav-logo">
+            dutchie
+            <span>tcg</span>
+        </a>
+        <div class="nav-links">
+            <a href="products.html">Shop</a>
+            <a href="#how-it-works">How it works</a>
+            <a href="#faq">FAQ</a>
+            <a href="cart.html" class="nav-cart">
+                Cart
+                <span class="cart-badge" id="cart-badge" style="display: none;">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="index.html">Home</a>
+            <span>/</span>
+            <a href="products.html">Shop</a>
+            <span>/</span>
+            <span class="current" id="breadcrumb-title">Product</span>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="product-grid">
+            <!-- Left: Images -->
+            <div class="product-images">
+                <div class="main-image" id="main-image">
+                    <div class="skeleton skeleton-image"></div>
+                </div>
+                <div class="image-thumbnails" id="thumbnails"></div>
+            </div>
+
+            <!-- Right: Details -->
+            <div class="product-details">
+                <div class="brand-tag" id="brand-tag"></div>
+                <h1 class="product-title" id="product-title"></h1>
+                <div class="product-type-badge" id="product-type-badge"></div>
+                <div class="price" id="price"></div>
+                <p class="description" id="description"></p>
+
+                <!-- Quantity Selector -->
+                <div class="quantity-selector">
+                    <button class="quantity-btn" id="qty-minus">−</button>
+                    <input type="number" class="quantity-input" id="qty-input" value="1" min="1">
+                    <button class="quantity-btn" id="qty-plus">+</button>
+                </div>
+
+                <!-- Buttons -->
+                <div class="button-group">
+                    <button class="btn btn-primary" id="add-to-cart-btn">Add to Cart</button>
+                    <button class="btn btn-secondary" id="buy-now-btn">Buy Now</button>
+                </div>
+
+                <!-- Info Items -->
+                <div class="info-items">
+                    <div class="info-item">
+                        <span class="info-item-icon">✓</span>
+                        <span>Cards shipped within 48h</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-item-icon">✓</span>
+                        <span>Sleeved & protected</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-item-icon">🔔</span>
+                        <span>Live stream notification</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- How it Works -->
+        <section class="section" id="how-it-works">
+            <h2 class="section-title">How Rip & Ship Works</h2>
+            <div class="steps-grid">
+                <div class="step">
+                    <div class="step-number">01</div>
+                    <div class="step-title">Order</div>
+                    <div class="step-description">Select your product and place your order through our secure checkout.</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">02</div>
+                    <div class="step-title">Live Opening</div>
+                    <div class="step-description">Watch our live stream as we open your cards in real-time for complete transparency.</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">03</div>
+                    <div class="step-title">Sleeved & Protected</div>
+                    <div class="step-description">Every card is carefully sleeved and protected before shipping to ensure perfect condition.</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">04</div>
+                    <div class="step-title">Fast Delivery</div>
+                    <div class="step-description">Receive your cards within 48 hours with professional packaging and tracking.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- You Might Also Like -->
+        <section class="section">
+            <h2 class="section-title">You Might Also Like</h2>
+            <div class="products-grid" id="related-products"></div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 DutchieTCG. All rights reserved.</p>
+    </footer>
+
+    <!-- Shopify Storefront API Module -->
+    <script>
+    (function() {
+        const SHOPIFY_DOMAIN = 'dutchietcg.myshopify.com';
+        const STOREFRONT_TOKEN = 'edee330c43e3452aff861f515863f067';
+        const API_VERSION = '2025-01';
+        const GRAPHQL_ENDPOINT = `https://${SHOPIFY_DOMAIN}/api/${API_VERSION}/graphql.json`;
+
+        window.ShopifyAPI = {
+            // GraphQL Request
+            graphqlRequest: async function(query, variables = {}) {
+                try {
+                    const response = await fetch(GRAPHQL_ENDPOINT, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Shopify-Storefront-Access-Token': STOREFRONT_TOKEN,
+                        },
+                        body: JSON.stringify({ query, variables }),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+
+                    if (data.errors) {
+                        console.error('GraphQL errors:', data.errors);
+                        throw new Error(data.errors[0].message);
+                    }
+
+                    return data.data;
+                } catch (error) {
+                    console.error('GraphQL request failed:', error);
+                    throw error;
+                }
+            },
+
+            // Get single product by handle
+            getProduct: async function(handle) {
+                const query = `
+                    query GetProduct($handle: String!) {
+                        product(handle: $handle) {
+                            id
+                            title
+                            description
+                            descriptionHtml
+                            handle
+                            productType
+                            tags
+                            vendor
+                            priceRange {
+                                minVariantPrice {
+                                    amount
+                                    currencyCode
+                                }
+                            }
+                            images(first: 10) {
+                                edges {
+                                    node {
+                                        url
+                                        altText
+                                        width
+                                        height
+                                    }
+                                }
+                            }
+                            variants(first: 250) {
+                                edges {
+                                    node {
+                                        id
+                                        title
+                                        availableForSale
+                                        price {
+                                            amount
+                                            currencyCode
+                                        }
+                                    }
+                                }
+                            }
+                            collection(first: 1) {
+                                handle
+                            }
+                        }
+                    }
+                `;
+
+                return this.graphqlRequest(query, { handle });
+            },
+
+            // Get products by collection
+            getProductsByCollection: async function(collectionHandle, first = 4) {
+                const query = `
+                    query GetProductsByCollection($handle: String!, $first: Int!) {
+                        collection(handle: $handle) {
+                            products(first: $first) {
+                                edges {
+                                    node {
+                                        id
+                                        title
+                                        handle
+                                        vendor
+                                        productType
+                                        images(first: 1) {
+                                            edges {
+                                                node {
+                                                    url
+                                                    altText
+                                                }
+                                            }
+                                        }
+                                        priceRange {
+                                            minVariantPrice {
+                                                amount
+                                                currencyCode
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                `;
+
+                return this.graphqlRequest(query, { handle: collectionHandle, first });
+            },
+
+            // Format price
+            formatPrice: function(amount, currency = 'EUR') {
+                return new Intl.NumberFormat('nl-NL', {
+                    style: 'currency',
+                    currency: currency,
+                }).format(amount);
+            },
+
+            // Cart operations
+            createCart: async function(lines) {
+                const query = `
+                    mutation CreateCart($lines: [CartLineInput!]!) {
+                        cartCreate(input: { lines: $lines }) {
+                            cart {
+                                id
+                                lines(first: 10) {
+                                    edges {
+                                        node {
+                                            id
+                                            quantity
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                `;
+
+                const data = await this.graphqlRequest(query, { lines });
+                const cart = data.cartCreate.cart;
+
+                // Store cart ID in localStorage
+                localStorage.setItem('dutchie_cart_id', cart.id);
+
+                return cart;
+            },
+
+            addToCart: async function(cartId, lines) {
+                const query = `
+                    mutation AddToCart($cartId: ID!, $lines: [CartLineInput!]!) {
+                        cartLinesAdd(cartId: $cartId, lines: $lines) {
+                            cart {
+                                id
+                                lines(first: 10) {
+                                    edges {
+                                        node {
+                                            id
+                                            quantity
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                `;
+
+                return this.graphqlRequest(query, { cartId, lines });
+            },
+
+            getCart: async function(cartId) {
+                const query = `
+                    query GetCart($id: ID!) {
+                        cart(id: $id) {
+                            id
+                            lines(first: 10) {
+                                edges {
+                                    node {
+                                        id
+                                        quantity
+                                        merchandise {
+                                            ... on ProductVariant {
+                                                product {
+                                                    title
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            cost {
+                                totalAmount {
+                                    amount
+                                    currencyCode
+                                }
+                            }
+                        }
+                    }
+                `;
+
+                return this.graphqlRequest(query, { id: cartId });
+            },
+
+            getCartCount: function() {
+                const count = localStorage.getItem('dutchie_cart_count');
+                return count ? parseInt(count) : 0;
+            },
+
+            setCartCount: function(count) {
+                localStorage.setItem('dutchie_cart_count', count);
+                this.updateCartBadge();
+            },
+
+            getCheckoutUrl: async function(cartId) {
+                const query = `
+                    query GetCheckoutUrl($id: ID!) {
+                        cart(id: $id) {
+                            checkoutUrl
+                        }
+                    }
+                `;
+
+                const data = await this.graphqlRequest(query, { id: cartId });
+                return data.cart.checkoutUrl;
+            },
+
+            updateCartBadge: function() {
+                const badge = document.getElementById('cart-badge');
+                const count = this.getCartCount();
+                if (count > 0) {
+                    badge.textContent = count;
+                    badge.style.display = 'flex';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+        };
+
+        // Initialize cart badge on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            window.ShopifyAPI.updateCartBadge();
+        });
+    })();
+    </script>
+
+    <!-- Page Logic -->
+    <script>
+        let currentProduct = null;
+        let currentImages = [];
+        let currentImageIndex = 0;
+
+        // Get URL parameter
+        function getUrlParameter(name) {
+            const params = new URLSearchParams(window.location.search);
+            return params.get(name);
+        }
+
+        // Load product
+        async function loadProduct() {
+            const handle = getUrlParameter('handle');
+
+            if (!handle) {
+                window.location.href = 'products.html';
+                return;
+            }
+
+            try {
+                const data = await ShopifyAPI.getProduct(handle);
+                currentProduct = data.product;
+
+                if (!currentProduct) {
+                    window.location.href = 'products.html';
+                    return;
+                }
+
+                renderProduct();
+                loadRelatedProducts();
+            } catch (error) {
+                console.error('Failed to load product:', error);
+                document.querySelector('main').innerHTML = '<p style="text-align: center; padding: 40px; color: var(--text-secondary);">Failed to load product. Please try again.</p>';
+            }
+        }
+
+        // Render product details
+        function renderProduct() {
+            // Update breadcrumb
+            document.getElementById('breadcrumb-title').textContent = currentProduct.title;
+
+            // Brand tag
+            document.getElementById('brand-tag').textContent = currentProduct.vendor || 'Unknown Brand';
+
+            // Title
+            document.getElementById('product-title').textContent = currentProduct.title;
+
+            // Product type badge
+            const typeTag = currentProduct.tags.find(tag =>
+                tag.toLowerCase() === 'rip & ship' ||
+                tag.toLowerCase() === 'sealed'
+            ) || 'Product';
+            document.getElementById('product-type-badge').textContent = typeTag;
+
+            // Price
+            const price = currentProduct.priceRange.minVariantPrice.amount;
+            const currency = currentProduct.priceRange.minVariantPrice.currencyCode;
+            document.getElementById('price').textContent = ShopifyAPI.formatPrice(price, currency);
+
+            // Description
+            const description = currentProduct.description || 'No description available';
+            document.getElementById('description').textContent = description;
+
+            // Images
+            currentImages = currentProduct.images.edges.map(edge => edge.node);
+            renderImages();
+        }
+
+        // Render images
+        function renderImages() {
+            const mainImageDiv = document.getElementById('main-image');
+            const thumbnailsDiv = document.getElementById('thumbnails');
+
+            mainImageDiv.innerHTML = '';
+            thumbnailsDiv.innerHTML = '';
+
+            if (currentImages.length > 0) {
+                // Main image
+                const img = document.createElement('img');
+                img.src = currentImages[currentImageIndex].url;
+                img.alt = currentImages[currentImageIndex].altText || 'Product image';
+                mainImageDiv.appendChild(img);
+
+                // Thumbnails
+                currentImages.forEach((image, index) => {
+                    const thumbnail = document.createElement('div');
+                    thumbnail.className = 'thumbnail' + (index === currentImageIndex ? ' active' : '');
+                    const thumbImg = document.createElement('img');
+                    thumbImg.src = image.url;
+                    thumbImg.alt = image.altText || 'Product image';
+                    thumbnail.appendChild(thumbImg);
+
+                    thumbnail.addEventListener('click', () => {
+                        currentImageIndex = index;
+                        document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+                        thumbnail.classList.add('active');
+                        const main = document.getElementById('main-image');
+                        main.innerHTML = '';
+                        const newImg = document.createElement('img');
+                        newImg.src = image.url;
+                        newImg.alt = image.altText || 'Product image';
+                        main.appendChild(newImg);
+                    });
+
+                    thumbnailsDiv.appendChild(thumbnail);
+                });
+            } else {
+                mainImageDiv.innerHTML = '📦';
+            }
+        }
+
+        // Quantity selector
+        document.getElementById('qty-minus').addEventListener('click', () => {
+            const input = document.getElementById('qty-input');
+            const value = parseInt(input.value) || 1;
+            input.value = Math.max(1, value - 1);
+        });
+
+        document.getElementById('qty-plus').addEventListener('click', () => {
+            const input = document.getElementById('qty-input');
+            const value = parseInt(input.value) || 1;
+            input.value = value + 1;
+        });
+
+        document.getElementById('qty-input').addEventListener('change', (e) => {
+            const value = parseInt(e.target.value) || 1;
+            e.target.value = Math.max(1, value);
+        });
+
+        // Add to cart
+        document.getElementById('add-to-cart-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('add-to-cart-btn');
+            btn.disabled = true;
+            btn.textContent = 'Adding...';
+
+            try {
+                const quantity = parseInt(document.getElementById('qty-input').value) || 1;
+                const variant = currentProduct.variants.edges.find(e => e.node.availableForSale);
+
+                if (!variant) {
+                    showToast('Product is out of stock');
+                    btn.disabled = false;
+                    btn.textContent = 'Add to Cart';
+                    return;
+                }
+
+                const variantId = variant.node.id;
+                const lines = [{ variantId, quantity }];
+
+                let cartId = localStorage.getItem('dutchie_cart_id');
+
+                if (cartId) {
+                    await ShopifyAPI.addToCart(cartId, lines);
+                } else {
+                    const cart = await ShopifyAPI.createCart(lines);
+                    cartId = cart.id;
+                }
+
+                // Update cart count
+                const currentCount = ShopifyAPI.getCartCount();
+                ShopifyAPI.setCartCount(currentCount + quantity);
+
+                showToast('Added to cart');
+                btn.disabled = false;
+                btn.textContent = 'Add to Cart';
+            } catch (error) {
+                console.error('Failed to add to cart:', error);
+                showToast('Failed to add to cart. Please try again.');
+                btn.disabled = false;
+                btn.textContent = 'Add to Cart';
+            }
+        });
+
+        // Buy now
+        document.getElementById('buy-now-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('buy-now-btn');
+            btn.disabled = true;
+            btn.textContent = 'Processing...';
+
+            try {
+                const quantity = parseInt(document.getElementById('qty-input').value) || 1;
+                const variant = currentProduct.variants.edges.find(e => e.node.availableForSale);
+
+                if (!variant) {
+                    showToast('Product is out of stock');
+                    btn.disabled = false;
+                    btn.textContent = 'Buy Now';
+                    return;
+                }
+
+                const variantId = variant.node.id;
+                const lines = [{ variantId, quantity }];
+
+                let cartId = localStorage.getItem('dutchie_cart_id');
+
+                if (cartId) {
+                    await ShopifyAPI.addToCart(cartId, lines);
+                } else {
+                    const cart = await ShopifyAPI.createCart(lines);
+                    cartId = cart.id;
+                }
+
+                const checkoutUrl = await ShopifyAPI.getCheckoutUrl(cartId);
+                window.location.href = checkoutUrl;
+            } catch (error) {
+                console.error('Failed to process purchase:', error);
+                showToast('Failed to process purchase. Please try again.');
+                btn.disabled = false;
+                btn.textContent = 'Buy Now';
+            }
+        });
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Load related products
+        async function loadRelatedProducts() {
+            try {
+                const vendor = currentProduct.vendor.toLowerCase().replace(/\s+/g, '-');
+                let collectionHandle = 'featured';
+
+                // Map vendor to collection
+                if (vendor.includes('pokemon')) {
+                    collectionHandle = 'pokemon-tcg';
+                } else if (vendor.includes('one piece')) {
+                    collectionHandle = 'one-piece';
+                } else if (vendor.includes('dragon ball')) {
+                    collectionHandle = 'dragon-ball';
+                } else if (vendor.includes('naruto')) {
+                    collectionHandle = 'naruto';
+                }
+
+                const data = await ShopifyAPI.getProductsByCollection(collectionHandle, 4);
+                const products = data.collection.products.edges
+                    .map(edge => edge.node)
+                    .filter(p => p.handle !== currentProduct.handle)
+                    .slice(0, 4);
+
+                renderRelatedProducts(products);
+            } catch (error) {
+                console.error('Failed to load related products:', error);
+                // Silently fail - related products are optional
+            }
+        }
+
+        // Render related products
+        function renderRelatedProducts(products) {
+            const container = document.getElementById('related-products');
+            container.innerHTML = '';
+
+            products.forEach(product => {
+                const card = document.createElement('a');
+                card.className = 'product-card';
+                card.href = `product.html?handle=${product.handle}`;
+
+                const image = product.images.edges[0]?.node;
+                const price = product.priceRange.minVariantPrice.amount;
+                const currency = product.priceRange.minVariantPrice.currencyCode;
+
+                card.innerHTML = `
+                    <div class="product-card-image">
+                        ${image ? `<img src="${image.url}" alt="${image.altText || 'Product'}">` : '📦'}
+                    </div>
+                    <div class="product-card-content">
+                        <div class="product-card-brand">${product.vendor}</div>
+                        <div class="product-card-title">${product.title}</div>
+                        <div class="product-card-price">${ShopifyAPI.formatPrice(price, currency)}</div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // Load on page load
+        document.addEventListener('DOMContentLoaded', loadProduct);
+    </script>
+</body>
+</html>
