@@ -1044,7 +1044,7 @@
         <a href="/" class="logo">dutchie<span>tcg</span></a>
         <ul class="nav-links">
             <li><a href="#how-it-works">How It Works</a></li>
-            <li><a href="#products">Shop</a></li>
+            <li><a href="products.html">Shop</a></li>
             <li><a href="#live">Live Stream</a></li>
             <li><a href="#pulls">Pulls</a></li>
         </ul>
@@ -1324,11 +1324,11 @@
             <div class="footer-col">
                 <h4>Shop</h4>
                 <ul>
-                    <li><a href="#">Pokemon TCG</a></li>
-                    <li><a href="#">One Piece</a></li>
-                    <li><a href="#">Dragon Ball</a></li>
-                    <li><a href="#">Naruto</a></li>
-                    <li><a href="#">Sealed Product</a></li>
+                    <li><a href="products.html">Pokemon TCG</a></li>
+                    <li><a href="products.html">One Piece</a></li>
+                    <li><a href="products.html">Dragon Ball</a></li>
+                    <li><a href="products.html">Naruto</a></li>
+                    <li><a href="products.html">Sealed Product</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -2491,7 +2491,7 @@ async function renderProducts(collectionHandle) {
       const firstVariantId = product.variants[0]?.id || null;
 
       return `
-        <div class="product-card">
+        <a href="product.html?handle=${product.handle}" class="product-card" style="text-decoration:none;color:inherit;">
           <div class="product-image">
             ${imageUrl ? `<img src="${imageUrl}" alt="${product.images[0].altText || product.title}">` : emoji}
             <span class="tag-overlay">Rip & Ship</span>
@@ -2503,7 +2503,7 @@ async function renderProducts(collectionHandle) {
             <span class="product-price">${price}</span>
             <span class="product-type">${product.productType || 'Product'}</span>
           </div>
-        </div>
+        </a>
       `;
     }).join('');
   } catch (error) {
@@ -2564,15 +2564,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Cart click handler
-  document.getElementById('navCart').addEventListener('click', async () => {
-    try {
-      const checkoutUrl = await DutchieShop.getCheckoutUrl();
-      window.location.href = checkoutUrl;
-    } catch (error) {
-      console.error('Error getting checkout URL:', error);
-      showToast('Failed to access cart', 'error');
-    }
+  // Cart click handler - go to cart page
+  document.getElementById('navCart').addEventListener('click', () => {
+    window.location.href = 'cart.html';
   });
 
   // Scroll animation observer
